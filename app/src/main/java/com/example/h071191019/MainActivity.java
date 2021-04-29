@@ -1,44 +1,58 @@
 package com.example.h071191019;
 
 import android.os.Bundle;
-import android.widget.Toast;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView rvHeroes;
-    private ArrayList<Movie> list = new ArrayList<Movie>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        rvHeroes = findViewById(R.id.rvHeroes);
-        rvHeroes.setHasFixedSize(true);
 
-        list.addAll(MoviesData.getListData());
-        showRecycleList();
-
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav.setSelectedItemId(R.id.nav_home);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+        }
     }
 
-    private void showRecycleList() {
-        rvHeroes.setLayoutManager(new LinearLayoutManager(this));
-        ListAdapter listAdapter = new ListAdapter(list);
-        rvHeroes.setAdapter(listAdapter);
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
+                    switch (item.getItemId()) {
+                        case R.id.nav_home:
+                            setActionBarTitle("Home");
+                            selectedFragment = new HomeFragment();
 
-        listAdapter.setOnItemClickCallback(new ListAdapter.OnItemClickCallback() {
-            @Override
-            public void onItemClicked(Movie data) {
-                showSelectedHero(data);
-            }
-        });
-    }
-    private void showSelectedHero(Movie movie) {
-        Toast.makeText(this, "Kamu memilih " + movie.getName(), Toast.LENGTH_SHORT).show();
-    }
 
+                            break;
+                        case R.id.nav_bookmark:
+                            selectedFragment = new Bookmark();
+                            setActionBarTitle("Bookmark");
+                            break;
+                        case R.id.nav_profile:
+                            selectedFragment = new Profile();
+                            setActionBarTitle("Profile");
+                            break;
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
+                    return true;
+                }
+            };
+
+    private void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
 }

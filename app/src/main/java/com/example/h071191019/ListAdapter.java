@@ -22,10 +22,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         this.listMovie = list;
     }
 
-    private OnItemClickCallback onItemClickCallback;
-    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback;
-    }
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,7 +71,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         }
     }
 
+
+
+    private OnItemClickCallback onItemClickCallback;
+
+
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback;
+    }
+
     public interface OnItemClickCallback {
         void onItemClicked(Movie data);
     }
 }
+
